@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Team } from 'src/app/models/player';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-read-list',
@@ -8,7 +9,7 @@ import { Team } from 'src/app/models/player';
 })
 export class ReadListComponent implements OnInit {
 
-  constructor() { }
+  constructor(private dataService: DataService) { }
 
   players: Team[] = [
     new Team('Dr. Monkey', 'Vincent Alexander', true),
@@ -30,9 +31,16 @@ export class ReadListComponent implements OnInit {
   result: Team[] = [];
 
   ngOnInit() {
+    this.getData();
     const shuffledPlayers = this.shuffle(this.players);
     shuffledPlayers.push(new Team('Sorian', 'Muffin', true));
     this.result = shuffledPlayers;
+  }
+
+  getData() {
+    this.dataService.getData('test').subscribe(data => {
+      console.log(data);
+    })
   }
 
   shuffle(array: Team[]) {
