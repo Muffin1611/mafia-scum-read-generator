@@ -4,13 +4,14 @@
         <mat-card-title>BAT COMPUTER 9000 (from scummiest to towniest)</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <mat-selection-list [multiple]="false">
+        <mat-selection-list *ngIf="result.length" [multiple]="false">
           <ng-container *ngFor="let team of result">
             <mat-list-option *ngIf="team.alive" [value]="">
               {{team.name1 + ' & ' + team.name2}}
             </mat-list-option>
           </ng-container>
         </mat-selection-list>
+        <mat-spinner class="spinner" *ngIf="!result.length"></mat-spinner>
       </mat-card-content>
     </mat-card>
   </div>
