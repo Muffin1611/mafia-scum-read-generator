@@ -7,3 +7,9 @@
     justify-content: center;
     margin-top: 4em;
 }
+
+@media only screen and (max-width: 600px) {
+    .player-card {
+        width: 90%;
+    }
+  }
