@@ -13,12 +13,6 @@ export class DataService {
     // this is for testing
     const threadNumb = '348298';
 
-    const options = {
-      headers: new HttpHeaders({ 
-        'Access-Control-Allow-Origin':'*',
-      })
-    };
-
-    return this.http.get('https://vote.fireblend.com/' + threadNumb + '/raw', options);
+    return this.http.get('https://vote.fireblend.com/' + threadNumb + '/raw');
   }
 }
