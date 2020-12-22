@@ -10,23 +10,6 @@ import { DataService } from 'src/app/services/data.service';
 export class ReadListComponent implements OnInit {
   constructor(private dataService: DataService) {}
 
-  players: Team[] = [
-    new Team('Dr. Monkey', 'Vincent Alexander', true),
-    new Team('Blargonaut', 'Lone_Prodigy', true),
-    new Team('Android Sophia', 'EzekelRAGE', true),
-    new Team('Funky Dude Sparks', 'Poltergust', true),
-    new Team('SalvaPot', 'nin', true),
-    new Team('Uzzy', 'Fanto', true),
-    new Team('Faddy', 'malus', true),
-    new Team('LuxCommander', 'Terrabyte20xx', true),
-    new Team('Hawthorn', 'jman1954goat', true),
-    new Team('The Bear', 'Sawneeks', true),
-    new Team('Geno', 'Terraforce', true),
-    new Team('Fireblend', 'weemadarthur', true),
-    new Team('TheChuggernaut', 'MrHedin', true),
-    new Team('AllThingsPurple', 'A Wild Ambulance Appears', true),
-  ];
-
   result: Team[] = [];
 
   dataPlayers: Array<Player> = [];
