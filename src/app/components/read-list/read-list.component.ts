@@ -97,8 +97,10 @@ export class ReadListComponent implements OnInit {
     const townIndex = shuffledTeams.findIndex(
       (team) => team.name1 == 'Muffin' || team.name2 == 'Muffin'
     );
-    const townTeam = shuffledTeams.splice(townIndex, 1);
-    shuffledTeams = shuffledTeams.concat(townTeam);
+    if (townIndex) {
+      const townTeam = shuffledTeams.splice(townIndex, 1);
+      shuffledTeams = shuffledTeams.concat(townTeam);
+    }
     this.resultTeams = shuffledTeams;
   }
 
@@ -107,8 +109,10 @@ export class ReadListComponent implements OnInit {
     const townIndex = shuffledPlayers.findIndex(
       (player) => player.name.toLowerCase() == 'muffin'
     );
-    const muffin = shuffledPlayers.splice(townIndex, 1);
-    shuffledPlayers = shuffledPlayers.concat(muffin);
+    if (townIndex) {
+      const muffin = shuffledPlayers.splice(townIndex, 1);
+      shuffledPlayers = shuffledPlayers.concat(muffin);
+    }
     this.result = shuffledPlayers;
   }
 
