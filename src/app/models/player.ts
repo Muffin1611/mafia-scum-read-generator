@@ -2,6 +2,41 @@ export class Player {
   flip_post: string;
   name: string;
   nickname: string;
+  pronouns: string;
+  replaced_by: string;
+  replaces: string;
+  status: string;
+  timezone: string;
+
+  constructor(
+    flip_post: string,
+    name: string,
+    nickname: string,
+    pronouns: string,
+    replaced_by: string,
+    replaces: string,
+    status: string,
+    timezone: string
+  ) {
+    this.flip_post = flip_post;
+    this.name = name;
+    this.nickname = nickname;
+    this.pronouns = pronouns;
+    this.replaced_by = replaced_by;
+    this.replaces = replaces;
+    this.status = status;
+    this.timezone = timezone;
+  }
+}
+
+export function isPlayer(object: any): object is Player {
+  return object && object.status && object.partner == undefined;
+}
+
+export class PlayerWithPartner {
+  flip_post: string;
+  name: string;
+  nickname: string;
   partner: string;
   pronouns: string;
   replaced_by: string;
@@ -32,8 +67,8 @@ export class Player {
   }
 }
 
-export function isPlayer(object: any): object is Player {
-  return object && object.status;
+export function isPlayerWithPartner(object: any): object is PlayerWithPartner {
+  return object && object.partner;
 }
 
 export class Team {

@@ -14,7 +14,7 @@ export class DataService {
     const threadNumb = '348298';
 
     return this.http.get<GameData>(
-      'https://vote.fireblend.com/' + threadNumb + '/raw'
+      'https://vote.fireblend.com/' + threadNumber + '/raw'
     );
   }
 }

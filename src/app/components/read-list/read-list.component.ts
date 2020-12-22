@@ -1,5 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { isPlayer, Player, Team } from 'src/app/models/player';
+import { ActivatedRoute } from '@angular/router';
+import { GameData } from 'src/app/models/game';
+import {
+  isPlayerWithPartner,
+  isPlayer,
+  PlayerWithPartner,
+  Player,
+  Team,
+} from 'src/app/models/player';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -8,57 +16,103 @@ import { DataService } from 'src/app/services/data.service';
   styleUrls: ['./read-list.component.scss'],
 })
 export class ReadListComponent implements OnInit {
-  constructor(private dataService: DataService) {}
+  constructor(
+    private dataService: DataService,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
-  result: Team[] = [];
+  result: Player[] = [];
 
   dataPlayers: Array<Player> = [];
 
+  resultTeams: Team[] = [];
+
+  dataTeamPlayers: Array<PlayerWithPartner> = [];
+
   dataTeams: Array<Team> = [];
 
-  ngOnInit() {
-    this.getData();
-  }
+  teamGame: boolean = false;
 
-  getData() {
-    this.dataService.getData('test').subscribe((data) => {
-      const keys = Object.keys(data.players);
-      keys.forEach((key) => {
-        if (isPlayer(data.players[key]))
-          this.dataPlayers.push(data.players[key] as Player);
-      });
-      this.dataPlayers.forEach((player) => {
-        const partner = this.dataPlayers.filter(
-          (partner) =>
-            partner.name.toLowerCase() == player.partner.toLowerCase()
-        )[0];
-        const alive =
-          player.status == 'alive' && partner.status == 'alive' ? true : false;
-        if (
-          !this.dataTeams.filter(
-            (team) =>
-              team.name1.toLowerCase() == player.name.toLowerCase() ||
-              team.name2.toLowerCase() == player.name.toLowerCase()
-          ).length
-        ) {
-          this.dataTeams.push(new Team(player.name, partner.name, alive));
-        }
-      });
-      this.totallyLegitShuffleAlgorithm();
+  threadNumber: string = '';
+
+  ngOnInit() {
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.threadNumber = params['thread'];
+      if (this.threadNumber) {
+        this.getData(this.threadNumber);
+      }
     });
   }
 
-  totallyLegitShuffleAlgorithm() {
-    let shuffledTeams = this.shuffle(this.dataTeams);
+  getData(thread: string) {
+    this.dataService.getData(thread).subscribe((data) => {
+      console.log(data);
+      if (data.players[Object.keys(data.players)[0]].partner) {
+        this.teamGame = true;
+      }
+      if (this.teamGame) {
+        this.setTeamData(data);
+        this.totallyLegitTeamShuffleAlgorithm();
+      } else {
+        this.setPlayerData(data);
+        this.totallyLegitShuffleAlgorithm();
+      }
+    });
+  }
+
+  setPlayerData(data: GameData) {
+    const keys = Object.keys(data.players);
+    keys.forEach((key) => {
+      if (isPlayer(data.players[key]))
+        this.dataPlayers.push(data.players[key] as Player);
+    });
+  }
+
+  setTeamData(data: GameData) {
+    const keys = Object.keys(data.players);
+    keys.forEach((key) => {
+      if (isPlayerWithPartner(data.players[key]))
+        this.dataTeamPlayers.push(data.players[key] as PlayerWithPartner);
+    });
+    this.dataTeamPlayers.forEach((player) => {
+      const partner = this.dataTeamPlayers.filter(
+        (partner) => partner.name.toLowerCase() == player.partner.toLowerCase()
+      )[0];
+      const alive =
+        player.status == 'alive' && partner.status == 'alive' ? true : false;
+      if (
+        !this.dataTeams.filter(
+          (team) =>
+            team.name1.toLowerCase() == player.name.toLowerCase() ||
+            team.name2.toLowerCase() == player.name.toLowerCase()
+        ).length
+      ) {
+        this.dataTeams.push(new Team(player.name, partner.name, alive));
+      }
+    });
+  }
+
+  totallyLegitTeamShuffleAlgorithm() {
+    let shuffledTeams = this.shuffle(this.dataTeams) as Team[];
     const townIndex = shuffledTeams.findIndex(
       (team) => team.name1 == 'Muffin' || team.name2 == 'Muffin'
     );
     const townTeam = shuffledTeams.splice(townIndex, 1);
     shuffledTeams = shuffledTeams.concat(townTeam);
-    this.result = shuffledTeams;
+    this.resultTeams = shuffledTeams;
   }
 
-  shuffle(array: Team[]) {
+  totallyLegitShuffleAlgorithm() {
+    let shuffledPlayers = this.shuffle(this.dataPlayers) as Player[];
+    const townIndex = shuffledPlayers.findIndex(
+      (player) => player.name.toLowerCase() == 'muffin'
+    );
+    const muffin = shuffledPlayers.splice(townIndex, 1);
+    shuffledPlayers = shuffledPlayers.concat(muffin);
+    this.result = shuffledPlayers;
+  }
+
+  shuffle(array: any[]) {
     var currentIndex: number = array.length,
       temporaryValue,
       randomIndex;
