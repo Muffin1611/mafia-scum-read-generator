@@ -5,9 +5,11 @@
     </mat-card-header>
     <mat-card-content>
       <mat-selection-list [multiple]="false">
-        <mat-list-option *ngFor="let team of result" [value]="">
-          {{team.name1 + ' & ' + team.name2}}
-        </mat-list-option>
+        <ng-container *ngFor="let team of result">
+          <mat-list-option *ngIf="team.alive" [value]="">
+            {{team.name1 + ' & ' + team.name2}}
+          </mat-list-option>
+        </ng-container>
       </mat-selection-list>
     </mat-card-content>
   </mat-card>
