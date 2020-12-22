@@ -123,6 +123,10 @@
               "devServerTarget": "mafia-scum-read-generator:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {}
         }
       }
     }
