@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { element } from 'protractor';
 import { GameData } from 'src/app/models/game';
 import {
   isPlayerWithPartner,
@@ -35,6 +36,24 @@ export class ReadListComponent implements OnInit {
 
   threadNumber: string = '';
 
+  aliveCheck = (array: Team[] | Player[]) => {
+    return array.some((element: Team | Player) => {
+      return element.status == 'alive';
+    });
+  };
+
+  deadCheck = (array: Team[] | Player[]) => {
+    return array.some((element: Team | Player) => {
+      return element.status == 'dead';
+    });
+  };
+
+  wonCheck = (array: Team[] | Player[]) => {
+    return array.some((element: Team | Player) => {
+      return element.status == 'victory';
+    });
+  };
+
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.threadNumber = params['thread'];
@@ -46,7 +65,6 @@ export class ReadListComponent implements OnInit {
 
   getData(thread: string) {
     this.dataService.getData(thread).subscribe((data) => {
-      console.log(data);
       if (data.players[Object.keys(data.players)[0]].partner) {
         this.teamGame = true;
       }
@@ -78,8 +96,6 @@ export class ReadListComponent implements OnInit {
       const partner = this.dataTeamPlayers.filter(
         (partner) => partner.name.toLowerCase() == player.partner.toLowerCase()
       )[0];
-      const alive =
-        player.status == 'alive' && partner.status == 'alive' ? true : false;
       if (
         !this.dataTeams.filter(
           (team) =>
@@ -87,7 +103,7 @@ export class ReadListComponent implements OnInit {
             team.name2.toLowerCase() == player.name.toLowerCase()
         ).length
       ) {
-        this.dataTeams.push(new Team(player.name, partner.name, alive));
+        this.dataTeams.push(new Team(player.name, partner.name, player.status));
       }
     });
   }
@@ -95,7 +111,9 @@ export class ReadListComponent implements OnInit {
   totallyLegitTeamShuffleAlgorithm() {
     let shuffledTeams = this.shuffle(this.dataTeams) as Team[];
     const townIndex = shuffledTeams.findIndex(
-      (team) => team.name1 == 'Muffin' || team.name2 == 'Muffin'
+      (team) =>
+        team.name1.toLowerCase() == 'muffin' ||
+        team.name2.toLowerCase() == 'muffin'
     );
     if (townIndex) {
       const townTeam = shuffledTeams.splice(townIndex, 1);

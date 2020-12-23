@@ -1,32 +1,106 @@
 <div class="container">
-    <mat-card class="player-card">
-      <mat-card-header>
-        <mat-card-title>BAT COMPUTER 9000 (from scummiest to towniest)</mat-card-title>
-        <mat-card-subtitle>
-          <a *ngIf="threadNumber" href="{{'https://www.resetera.com/threads/' + threadNumber}}">Here's the link to the thread!</a>
-          <label *ngIf="!threadNumber">No thread number provided in the URL!</label>
-        </mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content *ngIf="teamGame">
-        <mat-selection-list *ngIf="resultTeams.length" [multiple]="false">
+  <mat-card class="player-card">
+    <mat-card-header>
+      <mat-card-title
+        >BAT COMPUTER 9000 (from scummiest to towniest, works only on the
+        living)</mat-card-title
+      >
+      <mat-card-subtitle>
+        <a
+          *ngIf="threadNumber"
+          href="{{ 'https://www.resetera.com/threads/' + threadNumber }}"
+          >Here's the link to the thread!</a
+        >
+        <label *ngIf="!threadNumber"
+          >No thread number provided in the URL!</label
+        >
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content *ngIf="teamGame">
+      <mat-selection-list *ngIf="resultTeams.length" [multiple]="false">
+        <ng-container *ngIf="aliveCheck(resultTeams)">
+          <h2 class="list-header">Alive</h2>
           <ng-container *ngFor="let team of resultTeams">
-            <mat-list-option *ngIf="team.alive" [value]="">
-              {{team.name1 + ' & ' + team.name2}}
+            <mat-list-option *ngIf="team.status == 'alive'" [value]="">
+              {{ team.name1 + " & " + team.name2 }}
             </mat-list-option>
           </ng-container>
-        </mat-selection-list>
-        <mat-spinner class="spinner" *ngIf="!resultTeams.length"></mat-spinner>
-      </mat-card-content>
-      <mat-card-content *ngIf="!teamGame">
-        <mat-selection-list *ngIf="result.length" [multiple]="false">
+          <br />
+          <ng-container
+            *ngIf="
+              aliveCheck(resultTeams) &&
+              (deadCheck(dataTeams) || wonCheck(dataTeams))
+            "
+            ><mat-divider></mat-divider> <br
+          /></ng-container>
+        </ng-container>
+        <ng-container *ngIf="deadCheck(dataTeams)">
+          <h2 class="list-header">Dead</h2>
+          <ng-container *ngFor="let team of dataTeams">
+            <mat-list-option *ngIf="team.status == 'dead'" [value]="">
+              {{ team.name1 + " & " + team.name2 }}
+            </mat-list-option>
+          </ng-container>
+          <br />
+          <ng-container *ngIf="deadCheck(dataTeams) && wonCheck(dataTeams)">
+            <mat-divider></mat-divider>
+            <br />
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="wonCheck(dataTeams)">
+          <h2 class="list-header">Won</h2>
+          <ng-container *ngFor="let team of dataTeams">
+            <mat-list-option *ngIf="team.status == 'victory'" [value]="">
+              {{ team.name1 + " & " + team.name2 }}
+            </mat-list-option>
+          </ng-container>
+        </ng-container>
+      </mat-selection-list>
+      <mat-spinner class="spinner" *ngIf="!resultTeams.length"></mat-spinner>
+    </mat-card-content>
+    <mat-card-content *ngIf="!teamGame">
+      <mat-selection-list *ngIf="result.length" [multiple]="false">
+        <ng-container *ngIf="aliveCheck(result)">
+          <h2 class="list-header">Alive</h2>
           <ng-container *ngFor="let player of result">
             <mat-list-option *ngIf="player.status == 'alive'">
-              {{player.name}}
+              {{ player.name }}
             </mat-list-option>
           </ng-container>
-        </mat-selection-list>
-        <mat-spinner class="spinner" *ngIf="!result.length"></mat-spinner>
-      </mat-card-content>
-    </mat-card>
-  </div>
-  
+          <br />
+          <ng-container
+            *ngIf="
+              aliveCheck(result) &&
+              (deadCheck(dataPlayers) || wonCheck(dataPlayers))
+            "
+            ><mat-divider></mat-divider>
+            <br />
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="deadCheck(dataPlayers)">
+          <h2 class="list-header">Dead</h2>
+          <ng-container *ngFor="let player of dataPlayers">
+            <mat-list-option *ngIf="player.status == 'dead'">
+              {{ player.name }}
+            </mat-list-option>
+          </ng-container>
+          <br />
+          <ng-container *ngIf="deadCheck(dataPlayers) && wonCheck(dataPlayers)">
+            <mat-divider></mat-divider>
+            <br />
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="wonCheck(dataPlayers)">
+          <h2 class="list-header">Won</h2>
+          <ng-container *ngFor="let player of dataPlayers">
+            <mat-list-option *ngIf="player.status == 'victory'">
+              {{ player.name }}
+            </mat-list-option>
+          </ng-container>
+          <br />
+        </ng-container>
+      </mat-selection-list>
+      <mat-spinner class="spinner" *ngIf="!result.length"></mat-spinner>
+    </mat-card-content>
+  </mat-card>
+</div>

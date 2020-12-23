@@ -74,11 +74,11 @@ export function isPlayerWithPartner(object: any): object is PlayerWithPartner {
 export class Team {
   name1: string;
   name2: string;
-  alive: boolean;
+  status: string;
 
-  constructor(name1: string, name2: string, alive: boolean) {
+  constructor(name1: string, name2: string, status: string) {
     this.name1 = name1;
     this.name2 = name2;
-    this.alive = alive;
+    this.status = status;
   }
 }
