@@ -134,7 +134,8 @@ export class ReadListComponent implements OnInit {
     this.result = shuffledPlayers;
   }
 
-  shuffle(array: any[]) {
+  shuffle(originalArray: any[]) {
+    var array = [...originalArray];
     var currentIndex: number = array.length,
       temporaryValue,
       randomIndex;
